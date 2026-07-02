@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herbolaria Sanadora · Jardín de plantas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(145deg, #d4e8c6 0%, #b8d9a8 100%);
+      color: #1e3a2a;
+      scroll-behavior: smooth;
+      min-height: 100vh;
+    }
+
+    /* ----- PORTADA DINÁMICA ----- */
+    .portada {
+      position: relative;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: overlay;
+      background-color: rgba(60, 100, 50, 0.35);
+      box-shadow: inset 0 0 0 1000px rgba(70, 120, 60, 0.25);
+      border-bottom: 8px solid #7faa6d;
+      animation: fadeIn 1.2s ease-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .portada::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 40%, rgba(130, 200, 110, 0.2), transparent 70%);
+      z-index: 0;
+    }
+    .portada * {
+      position: relative;
+      z-index: 2;
+    }
+    .portada h1 {
+      font-size: clamp(4.5rem, 20vw, 8rem);
+      font-weight: 700;
+      color: #f7fff0;
+      text-shadow: 0 10px 35px rgba(0,0,0,0.5), 0 0 0 4px #6a9a5a, 0 0 0 8px #c5ddb5;
+      letter-spacing: 8px;
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+      animation: slideUp 1s ease-out;
+    }
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .portada .subtitulo {
+      font-size: 1.8rem;
+      color: #f6fff0;
+      background: rgba(60, 110, 50, 0.55);
+      backdrop-filter: blur(8px);
+      padding: 0.8rem 3rem;
+      border-radius: 80px;
+      font-weight: 600;
+      border: 2px solid #b5d3a5;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+      animation: slideUp 1.2s ease-out;
+    }
+    .portada .decoracion {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 2.5rem;
+      animation: pulse 3s infinite alternate;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* ----- BUSCADOR DINÁMICO ----- */
+    .buscador-wrapper {
+      background: linear-gradient(135deg, #c6dfb8 0%, #a8c99a 100%);
+      padding: 1.8rem 1rem 0.8rem;
+      border-bottom: 5px solid #6f9a5e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 6px 20px rgba(60, 100, 60, 0.2);
+    }
+    .buscador-fila {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 900px;
+    }
+    .buscador-wrapper label {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #1a3d1f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+    }
+    .buscador-wrapper input {
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      border: none;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.05rem;
+      background: #f4fcee;
+      color: #1e3a2a;
+      outline: none;
+      width: 300px;
+      max-width: 80%;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .buscador-wrapper input:focus {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(60, 140, 60, 0.25);
+      border: 2px solid #4a7a36;
+    }
+    .buscador-wrapper .contador {
+      font-weight: 700;
+      color: #1a4420;
+      background: #eef9e5;
+      padding: 0.4rem 1.5rem;
+      border-radius: 60px;
+      border: 2px solid #5f8f4a;
+      font-size: 1rem;
+      min-width: 90px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
+    .sin-resultados-buscador {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #2d5a2a;
+      padding: 0.8rem 1.5rem 1.2rem;
+      background: rgba(244, 252, 238, 0.92);
+      border-radius: 60px;
+      border: 3px dashed #5f8f4a;
+      box-shadow: 0 6px 20px rgba(60, 100, 60, 0.15);
+      width: 100%;
+      max-width: 550px;
+      margin: 0 auto;
+      backdrop-filter: blur(4px);
+      animation: shake 0.5s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+    .sin-resultados-buscador span {
+      font-size: 2.8rem;
+      margin-right: 0.8rem;
+    }
+
+    /* ----- ÍNDICE ----- */
+    .indice {
+      background: linear-gradient(145deg, #d4e8c6, #b8d9a8);
+      padding: 2rem 1rem 1.5rem;
+      border-bottom: 5px solid #6f9a5e;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    .indice h2 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: #1a3d1f;
+      letter-spacing: 3px;
+      margin-bottom: 1.5rem;
+      text-shadow: 2px 2px 0 #d0e8c0;
+    }
+    .indice-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .indice-grid a {
+      background: #eef9e5;
+      padding: 0.6rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 700;
+      color: #1a4420;
+      text-decoration: none;
+      border: 2px solid #5f8f4a;
+      box-shadow: 0 5px 0 #3d6e30, 0 6px 15px rgba(60, 100, 60, 0.15);
+      transition: all 0.12s ease;
+      font-size: 1.05rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .indice-grid a:hover {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #3d6e30, 0 6px 15px rgba(60, 100, 60, 0.2);
+      background: #d8f0ca;
+    }
+    .indice-grid a .icono-planta {
+      font-size: 1.3rem;
+    }
+
+    /* ----- CATÁLOGO DE FICHAS ----- */
+    .catalogo {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 2rem;
+    }
+    .catalogo h2 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #1a3d1f;
+      text-align: center;
+      margin-bottom: 2rem;
+      text-shadow: 2px 2px 0 #d0e8c0;
+      letter-spacing: 2px;
+      border-bottom: 4px solid #6f9a5e;
+      padding-bottom: 1rem;
+    }
+    .fichas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 2.8rem;
+    }
+    .ficha {
+      background: #f4fcee;
+      border-radius: 50px 50px 35px 35px;
+      box-shadow: 0 16px 40px rgba(60, 100, 60, 0.18), 0 6px 16px rgba(0,0,0,0.05);
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      border: 2px solid #b6d3a8;
+      display: flex;
+      flex-direction: column;
+    }
+    .ficha:hover {
+      transform: translateY(-12px) scale(1.01);
+      box-shadow: 0 28px 50px rgba(70, 120, 60, 0.3);
+      border-color: #5f8f4a;
+    }
+    .ficha.oculta {
+      display: none;
+    }
+    .ficha-imagen {
+      height: 220px;
+      background: #b3c9a8;
+      background-size: cover;
+      background-position: center;
+      border-bottom: 6px solid #7fac6b;
+      position: relative;
+      overflow: hidden;
+    }
+    .ficha-imagen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .ficha:hover .ficha-imagen img {
+      transform: scale(1.05);
+    }
+    .ficha-contenido {
+      padding: 1.8rem 1.8rem 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .ficha-contenido h3 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1c4523;
+      letter-spacing: -0.5px;
+      border-bottom: 3px dashed #aac99a;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .ficha-contenido .nombre-cientifico {
+      font-style: italic;
+      color: #3e6a36;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+      background: #dcefd2;
+      display: inline-block;
+      padding: 0.1rem 1.2rem;
+      border-radius: 30px;
+      align-self: flex-start;
+    }
+    .ficha-contenido p {
+      margin-bottom: 0.6rem;
+      line-height: 1.6;
+      color: #1f3d21;
+    }
+    .ficha-contenido strong {
+      color: #2a632a;
+      font-weight: 700;
+    }
+    .uso, .preparacion {
+      background: #dff0d6;
+      padding: 0.7rem 1.2rem;
+      border-radius: 25px;
+      margin: 0.4rem 0 0.5rem;
+      border-left: 7px solid #5f8f4a;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+    }
+    .uso strong, .preparacion strong {
+      display: block;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #2a662a;
+    }
+    .precaucion {
+      background: #fde8e5;
+      padding: 0.7rem 1.2rem;
+      border-radius: 25px;
+      margin: 0.4rem 0 0.5rem;
+      border-left: 7px solid #c0392b;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+    }
+    .precaucion strong {
+      display: block;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #a93226;
+    }
+    .ubicacion {
+      margin-top: 0.8rem;
+      padding: 0.5rem 1rem;
+      background: #d3e8c7;
+      border-radius: 60px;
+      font-size: 0.95rem;
+      border: 2px dashed #5f8f4a;
+      color: #1f4522;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ubicacion a {
+      color: #1a5a1a;
+      font-weight: 700;
+      text-decoration: none;
+      background: #e3f3d7;
+      padding: 0.2rem 1.2rem;
+      border-radius: 30px;
+      border: 2px dotted #6f9a5e;
+      flex: 1;
+      min-width: 80px;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .ubicacion a:hover {
+      background: #c5e6b2;
+      border-color: #3d6e30;
+      transform: scale(1.02);
+    }
+    .ubicacion::before {
+      content: "📍";
+      font-size: 1.3rem;
+      margin-right: 4px;
+    }
+
+    /* ===== COMPENDIO DIGITAL ===== */
+    #compendio {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 2rem;
+      scroll-margin-top: 20px;
+    }
+    #compendio h2 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #1a3d1f;
+      text-align: center;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 0 #d0e8c0;
+      letter-spacing: 2px;
+      border-bottom: 4px solid #6f9a5e;
+      padding-bottom: 1rem;
+    }
+    #compendio .texto-apoyo {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #2d5a2a;
+      max-width: 800px;
+      margin: 0 auto 1.5rem auto;
+      background: rgba(255,255,255,0.7);
+      padding: 1rem 2rem;
+      border-radius: 60px;
+      border: 2px solid #5f8f4a;
+      line-height: 1.6;
+    }
+    .pdf-contenedor {
+      background: #f4fcee;
+      border-radius: 2rem;
+      padding: 1.5rem;
+      border: 3px solid #5f8f4a;
+      box-shadow: 0 12px 35px rgba(60, 100, 60, 0.15);
+      min-height: 500px;
+    }
+    .pdf-contenedor object,
+    .pdf-contenedor embed,
+    .pdf-contenedor iframe {
+      width: 100%;
+      height: 600px;
+      border-radius: 1rem;
+      border: 2px solid #b6d3a8;
+      background: white;
+    }
+    .pdf-contenedor .enlace-pdf {
+      display: inline-block;
+      background: linear-gradient(145deg, #5f8f4a, #4a7a36);
+      color: white;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: 0.2s;
+      box-shadow: 0 6px 0 #2f5a22, 0 8px 20px rgba(60, 100, 60, 0.25);
+      border: 2px solid #8db67a;
+      cursor: pointer;
+      border: none;
+    }
+    .pdf-contenedor .enlace-pdf:hover {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #2f5a22, 0 8px 20px rgba(60, 100, 60, 0.3);
+      background: linear-gradient(145deg, #4a7a36, #3d6e30);
+    }
+    .pdf-contenedor .descarga-wrapper {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    /* ===== BOTÓN CARRITO ===== */
+    .carrito {
+      max-width: 1100px;
+      margin: 2rem auto 1.5rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(145deg, #eaf5e3, #d4e8c6);
+      border-radius: 70px 70px 40px 40px;
+      border: 4px solid #5f8f4a;
+      box-shadow: 0 12px 35px rgba(60, 100, 60, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      transition: all 0.3s;
+    }
+    .carrito:hover {
+      box-shadow: 0 18px 45px rgba(60, 100, 60, 0.35);
+    }
+    .btn-carrito {
+      background: linear-gradient(145deg, #5f8f4a, #4a7a36);
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 1.2rem 3rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      transition: 0.2s;
+      box-shadow: 0 6px 0 #2f5a22, 0 8px 20px rgba(60, 100, 60, 0.25);
+      border: 2px solid #8db67a;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+    .btn-carrito:hover {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #2f5a22, 0 8px 20px rgba(60, 100, 60, 0.3);
+      background: linear-gradient(145deg, #4a7a36, #3d6e30);
+    }
+
+    /* ===== TIENDA (OCULTA INICIALMENTE) ===== */
+    #tienda {
+      scroll-margin-top: 20px;
+      display: none;
+    }
+    #tienda.visible {
+      display: block;
+    }
+    .tienda-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: #fffcf7;
+      border-radius: 2.5rem;
+      padding: 2rem 2rem 3rem;
+      box-shadow: 0 20px 40px rgba(60, 45, 30, 0.08);
+      border: 4px solid #5f8f4a;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+    .tienda-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #e6ddd2;
+      padding-bottom: 1.5rem;
+    }
+    .tienda-header h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #2b5a3b;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tienda-header h2 i {
+      color: #5b8c5a;
+    }
+    .tienda-header .cart-icon {
+      font-size: 1.3rem;
+      background: #e9f0e6;
+      padding: 0.5rem 1.5rem;
+      border-radius: 60px;
+      color: #1f4029;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tienda-header .cart-icon span {
+      background: #2b5a3b;
+      color: white;
+      border-radius: 40px;
+      padding: 0.1rem 0.8rem;
+      font-weight: 600;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.8rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 1.8rem;
+      padding: 1rem 1rem 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      transition: 0.25s ease;
+      border: 1px solid #eee7de;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: #b8cfb0;
+      box-shadow: 0 18px 30px -12px rgba(60, 80, 50, 0.12);
+    }
+    .product-img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: #f1f7ef;
+      border-radius: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+    }
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 1.5rem;
+    }
+    .product-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0.2rem 0 0.2rem;
+      color: #1f3a26;
+    }
+    .product-price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #2b5a3b;
+      background: #f1f7ef;
+      padding: 0.1rem 1.2rem;
+      border-radius: 40px;
+      display: inline-block;
+      margin: 0.2rem 0 0.6rem;
+    }
+    .btn-add {
+      background: #2b5a3b;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+      max-width: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-add:hover {
+      background: #1e452b;
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(40, 80, 40, 0.15);
+    }
+    .payment-section {
+      background: #f4f9f2;
+      border-radius: 2rem;
+      padding: 2rem;
+      margin-top: 2.5rem;
+      border: 1px solid #dde8d6;
+    }
+    .payment-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1f4029;
+      margin-bottom: 1.2rem;
+    }
+    .payment-methods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid #d3e0cb;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #1f3a26;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .payment-option i {
+      font-size: 1.2rem;
+      color: #3f6b44;
+    }
+    .payment-option .badge {
+      background: #2b5a3b;
+      color: white;
+      font-size: 0.65rem;
+      padding: 0.05rem 0.6rem;
+      border-radius: 40px;
+    }
+    .toggle-card-btn {
+      background: transparent;
+      border: 2px dashed #9bb892;
+      color: #1f4029;
+      padding: 0.4rem 1.5rem;
+      border-radius: 60px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .toggle-card-btn:hover {
+      background: #eef6eb;
+      border-color: #6f9a6a;
+    }
+    .card-form {
+      background: white;
+      border-radius: 1.8rem;
+      padding: 1.5rem 2rem;
+      margin: 1rem 0 1.2rem;
+      border: 1px solid #d3e0cb;
+      display: none;
+      max-width: 500px;
+    }
+    .card-form.active {
+      display: block;
+    }
+    .card-form h3 {
+      font-size: 1.1rem;
+      color: #1f4029;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-group {
+      margin-bottom: 0.8rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #2d4a30;
+      margin-bottom: 0.2rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border: 1px solid #d3e0cb;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      background: #fafcf9;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #5b8c5a;
+      box-shadow: 0 0 0 3px rgba(70, 130, 70, 0.15);
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .btn-pay {
+      background: #1f4029;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+    }
+    .btn-pay:hover {
+      background: #13331e;
+      transform: scale(1.02);
+    }
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #4f6d4a;
+      margin-top: 0.8rem;
+      justify-content: center;
+    }
+    .payment-info {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid #d3e0cb;
+      padding-top: 1.2rem;
+    }
+    .payment-info .secure {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #3d5e3b;
+      font-size: 0.9rem;
+    }
+    .payment-info .total-demo {
+      background: white;
+      padding: 0.3rem 1.5rem;
+      border-radius: 60px;
+      font-weight: 600;
+      border: 1px solid #c6d8bd;
+    }
+    .btn-checkout {
+      background: #1f4029;
+      color: white;
+      border: none;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-checkout:hover {
+      background: #13331e;
+      transform: scale(1.02);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 1.5rem 1rem 2.5rem;
+      color: #1e4523;
+      background: linear-gradient(145deg, #c2ddb6, #b0d0a2);
+      border-top: 6px solid #5f8f4a;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      font-size: 1.05rem;
+    }
+    @media (max-width: 600px) {
+      .portada h1 { font-size: 3.8rem; }
+      .portada .subtitulo { font-size: 1.2rem; padding: 0.5rem 1.5rem; }
+      .indice-grid a { font-size: 0.85rem; padding: 0.4rem 0.9rem; }
+      .ficha-contenido h3 { font-size: 1.6rem; }
+      .catalogo h2, #compendio h2 { font-size: 2rem; }
+      .pdf-contenedor object,
+      .pdf-contenedor embed,
+      .pdf-contenedor iframe { height: 400px; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .tienda-container { padding: 1.2rem; }
+      .payment-info { flex-direction: column; align-items: stretch; }
+      .form-row { flex-direction: column; gap: 0; }
+      .carrito { flex-direction: column; align-items: stretch; padding: 1.5rem; }
+      .btn-carrito { font-size: 1.2rem; padding: 1rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- PORTADA DINÁMICA -->
+  <header class="portada">
+    <h1>🌿 Herbolaria Sanadora</h1>
+    <p class="subtitulo">✨ jardín de plantas medicinales ✨</p>
+    <div class="decoracion">
+      <span>🌸</span>
+      <span>🌻</span>
+      <span>🌺</span>
+      <span>🌿</span>
+      <span>🌼</span>
+    </div>
+  </header>
+
+  <!-- BUSCADOR -->
+  <div class="buscador-wrapper" id="buscador-wrapper">
+    <div class="buscador-fila">
+      <label for="buscador">🔍 Buscar planta:</label>
+      <input type="text" id="buscador" placeholder="Ej: romero, lavanda, sábila..." autocomplete="off">
+      <span class="contador" id="contador">🌱 10 plantas</span>
+    </div>
+    <div id="mensaje-no-encontrado"></div>
+  </div>
+
+  <!-- ÍNDICE -->
+  <nav class="indice" id="indice">
+    <h2>🌱 índice de fichas</h2>
+    <div class="indice-grid">
+      <a href="#ficha1"><span class="icono-planta">🌿</span> Romero</a>
+      <a href="#ficha2"><span class="icono-planta">🌱</span> Tecedrón</a>
+      <a href="#ficha3"><span class="icono-planta">🌸</span> Árnica</a>
+      <a href="#ficha4"><span class="icono-planta">🌼</span> Manzanilla</a>
+      <a href="#ficha5"><span class="icono-planta">🌿</span> Ruda</a>
+      <a href="#ficha6"><span class="icono-planta">💜</span> Lavanda</a>
+      <a href="#ficha7"><span class="icono-planta">🌵</span> Sábila</a>
+      <a href="#ficha8"><span class="icono-planta">🌾</span> Cola de Caballo</a>
+      <a href="#ficha9"><span class="icono-planta">🌻</span> Gordolobo</a>
+      <a href="#ficha10"><span class="icono-planta">🌼</span> Diente de León</a>
+    </div>
+  </nav>
+
+  <!-- ===== CATÁLOGO DE PLANTAS ===== -->
+  <section class="catalogo" id="catalogo">
+    <h2>🌿 Catálogo de plantas medicinales</h2>
+    <div class="fichas-grid">
+
+      <!-- 1. Romero -->
+      <div class="ficha" id="ficha1" data-nombre="romero">
+        <div class="ficha-imagen">
+          <img src="romero.jpg" alt="Romero">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Romero</h3>
+          <div class="nombre-cientifico">Salvia rosmarinus</div>
+          <p><strong>Descripción:</strong> Arbusto perenne de hojas lineales, muy aromático. Originario del Mediterráneo.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Mejora la memoria, digestivo, antiinflamatorio y antioxidante.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de 1 cucharada de hojas secas por taza, 2 veces al día.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Evitar en personas con hipertensión o epilepsia.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/cpXNuWfU4vtYNhZu5" target="_blank">En toda el área del campo</a></div>
+        </div>
+      </div>
+
+      <!-- 2. Tecedrón -->
+      <div class="ficha" id="ficha2" data-nombre="tecedron">
+        <div class="ficha-imagen">
+          <img src="tecedron.jpg" alt="Tecedrón">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Tecedron</h3>
+          <div class="nombre-cientifico">Lippia alba</div>
+          <p><strong>Descripción:</strong> Planta aromática de la familia de las verbenáceas, nativa de América tropical.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Calmante, antiespasmódico, ayuda en trastornos digestivos.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de hojas frescas (5g por taza), 3 veces al día.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Puede causar somnolencia.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/bv1RAmFnC8cGfyMn8" target="_blank">En la casa azul</a></div>
+        </div>
+      </div>
+
+      <!-- 3. Árnica -->
+      <div class="ficha" id="ficha3" data-nombre="arnica">
+        <div class="ficha-imagen">
+          <img src="arnica.jpg" alt="Árnica">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Arnica</h3>
+          <div class="nombre-cientifico">Arnica montana</div>
+          <p><strong>Descripción:</strong> Planta de montaña con flores amarillas, usada tradicionalmente en Europa.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Antiinflamatorio y cicatrizante para golpes y contusiones.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Uso externo: tintura o pomada. No ingerir sin supervisión.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas ni en heridas abiertas. Uso exclusivamente externo.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/nTwf5kHBwn8HNh799" target="_blank">Dentro del paredon</a></div>
+        </div>
+      </div>
+
+      <!-- 4. Manzanilla -->
+      <div class="ficha" id="ficha4" data-nombre="manzanilla">
+        <div class="ficha-imagen">
+          <img src="manzanilla.jpg" alt="Manzanilla">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Manzanilla</h3>
+          <div class="nombre-cientifico">Matricaria chamomilla</div>
+          <p><strong>Descripción:</strong> Hierba anual de flores blancas y amarillas, conocida por su suave aroma.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Digestiva, relajante, antiinflamatoria y suave sedante.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de flores secas (1 cda por taza), 3 veces al día.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> Posible alergia en personas sensibles a la ambrosía. Evitar en dosis muy altas.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/JgYVdtsDZjSqPdjYA" target="_blank">En todo el campo</a></div>
+        </div>
+      </div>
+
+      <!-- 5. Ruda -->
+      <div class="ficha" id="ficha5" data-nombre="ruda">
+        <div class="ficha-imagen">
+          <img src="ruda.jpg" alt="Ruda">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Ruda</h3>
+          <div class="nombre-cientifico">Ruta graveolens</div>
+          <p><strong>Descripción:</strong> Arbusto de hojas verdes azuladas, fuerte olor y sabor amargo.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Antiparasitaria, antiespasmódica, tradicionalmente para cólicos.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de 1g de hojas secas por taza (con precaución).</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Altamente tóxica en dosis altas. Usar con extrema precaución.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/5ENyuCmMpEcuw9kJ7" target="_blank">Serca de los nopales</a></div>
+        </div>
+      </div>
+
+      <!-- 6. Lavanda -->
+      <div class="ficha" id="ficha6" data-nombre="lavanda">
+        <div class="ficha-imagen">
+          <img src="lavanda.jpg" alt="Lavanda">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Lavanda</h3>
+          <div class="nombre-cientifico">Lavandula angustifolia</div>
+          <p><strong>Descripción:</strong> Planta perenne de flores moradas, muy aromática. Cultivada en todo el mundo.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Calmante, ayuda a conciliar el sueño, alivia dolores de cabeza.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de flores secas (1 cda por taza) o aceite esencial.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Puede causar irritación en piel sensible.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/g2pntsr7PiUeAU2T7" target="_blank">Dentro de la escuela,en el área de las jardineras</a></div>
+        </div>
+      </div>
+
+      <!-- 7. Sábila -->
+      <div class="ficha" id="ficha7" data-nombre="sabila">
+        <div class="ficha-imagen">
+          <img src="sabila.jpg" alt="Sábila">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Sabila</h3>
+          <div class="nombre-cientifico">Aloe vera</div>
+          <p><strong>Descripción:</strong> Planta suculenta de hojas carnosas, ampliamente usada por sus propiedades.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Cicatrizante, hidratante, digestiva y antiinflamatoria.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Gel interno: extraer la pulpa y aplicar tópicamente o tomar jugo.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Evitar en personas con problemas renales.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/rUyxG4Ppio4b4WPT8?g_st=iw" target="_blank">En el balcon, de la casa naranja</a></div>
+        </div>
+      </div>
+
+      <!-- 8. Cola de Caballo -->
+      <div class="ficha" id="ficha8" data-nombre="cola de caballo">
+        <div class="ficha-imagen">
+          <img src="coladecaballo.jpg" alt="Cola de Caballo">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Cola de Caballo</h3>
+          <div class="nombre-cientifico">Equisetum arvense</div>
+          <p><strong>Descripción:</strong> Planta primitiva de tallos segmentados, rica en sílice.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Diurética, fortalece uñas y cabello, ayuda en osteoporosis.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de 1 cucharada por taza, 2 veces al día.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas ni en personas con insuficiencia renal.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/9PiAt85wL4Saf1WeA" target="_blank">En la parte de atras de las gradas</a></div>
+        </div>
+      </div>
+
+      <!-- 9. Gordolobo -->
+      <div class="ficha" id="ficha9" data-nombre="gordolobo">
+        <div class="ficha-imagen">
+          <img src="gordolobo.jpg" alt="Gordolobo">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Gordolobo</h3>
+          <div class="nombre-cientifico">Verbascum thapsus</div>
+          <p><strong>Descripción:</strong> Planta bienal de tallo alto y hojas lanosas, común en caminos.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Expectorante, alivia la tos y calma la irritación de garganta.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de flores y hojas (1 cda por taza), 3 veces al día.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Puede interactuar con medicamentos para la presión.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/zWMMDi7rjQNx45Mb7" target="_blank">Serca de la casita abandonada</a></div>
+        </div>
+      </div>
+
+      <!-- 10. Diente de León -->
+      <div class="ficha" id="ficha10" data-nombre="diente de leon">
+        <div class="ficha-imagen">
+          <img src="dientedeleon.jpg" alt="Diente de León">
+        </div>
+        <div class="ficha-contenido">
+          <h3>Diente de Leon</h3>
+          <div class="nombre-cientifico">Taraxacum officinale</div>
+          <p><strong>Descripción:</strong> Hierba perenne de flores amarillas y hojas dentadas, muy común.</p>
+          <div class="uso"><strong>💚 Uso:</strong> Digestivo, depurativo, diurético y estimulante del apetito.</div>
+          <div class="preparacion"><strong>🧪 Método de preparar:</strong> Infusión de raíz u hojas (1 cda por taza), 2 veces al día.</div>
+          <div class="precaucion"><strong>⚠️ Precauciones:</strong> No usar en embarazadas. Evitar en personas con alergia a la ambrosía.</div>
+          <div class="ubicacion">📍 <a href="https://maps.app.goo.gl/Kpnm4A3QcWUxb2Hq7" target="_blank">Serca de los árboles</a></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== COMPENDIO DIGITAL ===== -->
+  <section id="compendio">
+    <h2>📚 Compendio digital</h2>
+    <p class="texto-apoyo">
+      🌿 Consulta aquí el compendio digital con información ampliada sobre las plantas medicinales del proyecto, 
+      sus usos tradicionales, propiedades y métodos de preparación.
+    </p>
+    <div class="pdf-contenedor">
+      <!-- PDF incrustado con object (muestra todas las páginas) -->
+      <object data="compendio_plantas_medicinales_v2.pdf#page=1&zoom=100%" type="application/pdf">
+        <p>⚠️ Tu navegador no puede mostrar el PDF. <a href="compendio_plantas_medicinales_v2.pdf" target="_blank">Abrir PDF en nueva pestaña</a>.</p>
+      </object>
+      
+      <!-- Botón de descarga con JavaScript para forzar la descarga -->
+      <div class="descarga-wrapper">
+        <button class="enlace-pdf" id="btnDescargarPDF">
+          📥 Descargar compendio completo (6 páginas)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARRITO - Botón que muestra la tienda -->
+  <div class="carrito">
+    <button class="btn-carrito" id="btnMostrarTienda">🛒 Carrito de compras</button>
+  </div>
+
+  <!-- TIENDA (oculta inicialmente) -->
+  <div id="tienda">
+    <div class="tienda-container">
+      <div class="tienda-header">
+        <h2><i class="fas fa-store"></i> Tienda Herbolaria</h2>
+        <div class="cart-icon">
+          <i class="fas fa-shopping-bag"></i>
+          <span id="tiendaTotal">$0.00</span>
+        </div>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- Producto 1 -->
+        <div class="product-card">
+          <div class="product-img"><img src="cremac.jpg" alt="Crema Caléndula"></div>
+          <div class="product-name">Crema Caléndula</div>
+          <div class="product-price" data-price="100">$100</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 2 -->
+        <div class="product-card">
+          <div class="product-img"><img src="cremam.jpg" alt="Crema Manzanilla"></div>
+          <div class="product-name">Crema Manzanilla</div>
+          <div class="product-price" data-price="100">$100</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 3 -->
+        <div class="product-card">
+          <div class="product-img"><img src="ungüentoa.jpg" alt="Ungüento Árnica"></div>
+          <div class="product-name">Ungüento Árnica</div>
+          <div class="product-price" data-price="75">$75</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 4 -->
+        <div class="product-card">
+          <div class="product-img"><img src="ungüentor.jpg" alt="Ungüento Ruda"></div>
+          <div class="product-name">Ungüento Ruda</div>
+          <div class="product-price" data-price="80">$80</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 5 -->
+        <div class="product-card">
+          <div class="product-img"><img src="jabonr.jpg" alt="Jabón Romero"></div>
+          <div class="product-name">Jabón Romero</div>
+          <div class="product-price" data-price="85">$85</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 6 -->
+        <div class="product-card">
+          <div class="product-img"><img src="jabonl.jpg" alt="Jabón Lavanda"></div>
+          <div class="product-name">Jabón Lavanda</div>
+          <div class="product-price" data-price="35">$35</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 7 -->
+        <div class="product-card">
+          <div class="product-img"><img src="champur.jpg" alt="Champú Romero"></div>
+          <div class="product-name">Champú Romero</div>
+          <div class="product-price" data-price="139">$139</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 8 -->
+        <div class="product-card">
+          <div class="product-img"><img src="champuc.jpg" alt="Champú Cola Caballo"></div>
+          <div class="product-name">Champú Cola Caballo</div>
+          <div class="product-price" data-price="150">$150</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 9 -->
+        <div class="product-card">
+          <div class="product-img"><img src="teh.jpg" alt="Té Hierbabuena"></div>
+          <div class="product-name">Té compacto Hierbabuena</div>
+          <div class="product-price" data-price="20">$20</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+        <!-- Producto 10 -->
+        <div class="product-card">
+          <div class="product-img"><img src="tes.jpg" alt="Té Sábila"></div>
+          <div class="product-name">Té compacto de Sábila</div>
+          <div class="product-price" data-price="20">$20</div>
+          <button class="btn-add"><i class="fas fa-plus-circle"></i> Añadir</button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DE PAGO -->
+      <div class="payment-section">
+        <div class="payment-title">
+          <i class="fas fa-credit-card"></i>
+          <span>Métodos de pago</span>
+        </div>
+        <div class="payment-methods">
+          <div class="payment-option"><i class="fab fa-cc-visa"></i> Visa <span class="badge">seguro</span></div>
+          <div class="payment-option"><i class="fab fa-cc-mastercard"></i> Mastercard</div>
+          <div class="payment-option"><i class="fab fa-cc-amex"></i> Amex</div>
+          <div class="payment-option"><i class="fab fa-paypal"></i> PayPal</div>
+          <div class="payment-option"><i class="fas fa-mobile-alt"></i> Mercado Pago</div>
+          <div class="payment-option"><i class="fas fa-building-columns"></i> Transferencia</div>
+          <div class="payment-option"><i class="fas fa-wallet"></i> Efectivo</div>
+          <button class="toggle-card-btn" id="toggleCardBtn"><i class="fas fa-credit-card"></i> Pagar con tarjeta</button>
+        </div>
+
+        <div class="card-form" id="cardForm">
+          <h3><i class="fas fa-lock"></i> Datos de tu tarjeta</h3>
+          <form id="paymentForm">
+            <div class="form-group">
+              <label for="cardNumber">Número de tarjeta</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+            <div class="form-group">
+              <label for="cardName">Nombre del titular</label>
+              <input type="text" id="cardName" placeholder="Como aparece en la tarjeta" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiry">Fecha de vencimiento</label>
+                <input type="text" id="expiry" placeholder="MM/AA" maxlength="5" required>
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" placeholder="***" maxlength="4" required>
+              </div>
+            </div>
+            <button type="submit" class="btn-pay"><i class="fas fa-check-circle"></i> Pagar</button>
+            <div class="secure-badge"><i class="fas fa-shield-alt"></i> Datos encriptados · SSL seguro</div>
+          </form>
+        </div>
+
+        <div class="payment-info">
+          <div class="secure"><i class="fas fa-lock"></i> Pagos 100% seguros</div>
+          <div class="total-demo"><i class="fas fa-tag"></i> Total: <strong id="totalPago">$0.00</strong></div>
+          <button class="btn-checkout" id="checkoutBtn"><i class="fas fa-shopping-cart"></i> Proceder al pago</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>🌿 Herbolaria Sanadora · plantas medicinales · ubicación con mapa</p>
+    <p style="font-size:0.9rem; margin-top:0.4rem; color:#2d5a2d;">Haz clic en la ubicación para ver en Google Maps · carrito funcional · buscador en tiempo real</p>
+  </footer>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script>
+    // ===== BUSCADOR =====
+    const buscador = document.getElementById('buscador');
+    const fichas = document.querySelectorAll('.ficha');
+    const contador = document.getElementById('contador');
+    const mensajeContainer = document.getElementById('mensaje-no-encontrado');
+
+    function filtrarPlantas() {
+      const termino = buscador.value.toLowerCase().trim();
+      let visibles = 0;
+      mensajeContainer.innerHTML = '';
+      fichas.forEach(ficha => {
+        const nombre = ficha.getAttribute('data-nombre') || '';
+        const texto = ficha.textContent.toLowerCase();
+        const coincide = termino === '' || nombre.includes(termino) || texto.includes(termino);
+        ficha.classList.toggle('oculta', !coincide);
+        if (coincide) visibles++;
+      });
+      if (visibles === 0 && termino !== '') {
+        mensajeContainer.innerHTML = `<div class="sin-resultados-buscador"><span>🌿</span> Planta no encontrada</div>`;
+        contador.textContent = '🌱 0 plantas';
+      } else {
+        contador.textContent = `🌱 ${visibles} planta${visibles !== 1 ? 's' : ''}`;
+      }
+    }
+    buscador.addEventListener('input', filtrarPlantas);
+
+    // ===== MOSTRAR/OCULTAR TIENDA =====
+    const btnMostrarTienda = document.getElementById('btnMostrarTienda');
+    const tienda = document.getElementById('tienda');
+    let tiendaVisible = false;
+
+    btnMostrarTienda.addEventListener('click', function(e) {
+      e.preventDefault();
+      tiendaVisible = !tiendaVisible;
+      tienda.classList.toggle('visible', tiendaVisible);
+      btnMostrarTienda.textContent = tiendaVisible ? '🛒 Cerrar carrito' : '🛒 Carrito de compras';
+      
+      if (tiendaVisible) {
+        setTimeout(() => {
+          tienda.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    });
+
+    // ===== DESCARGAR PDF CON JAVASCRIPT =====
+    document.getElementById('btnDescargarPDF').addEventListener('click', function() {
+      // Crear un enlace temporal
+      const link = document.createElement('a');
+      link.href = 'compendio_plantas_medicinales_v2.pdf';
+      link.download = 'compendio_plantas_medicinales_v2.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Mostrar mensaje de confirmación
+      const btn = this;
+      const textoOriginal = btn.innerHTML;
+      btn.innerHTML = '✅ ¡Descarga iniciada!';
+      btn.style.background = '#2b6b3a';
+      setTimeout(() => {
+        btn.innerHTML = textoOriginal;
+        btn.style.background = '';
+      }, 3000);
+    });
+
+    // ===== CARRITO =====
+    let totalCarrito = 0;
+    const tiendaTotal = document.getElementById('tiendaTotal');
+    const totalPago = document.getElementById('totalPago');
+
+    function actualizarTotal() {
+      const totalFormateado = totalCarrito.toFixed(2);
+      tiendaTotal.textContent = '$' + totalFormateado;
+      totalPago.textContent = '$' + totalFormateado;
+    }
+
+    document.querySelectorAll('.btn-add').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productCard = this.closest('.product-card');
+        const productName = productCard.querySelector('.product-name').innerText;
+        const price = parseFloat(productCard.querySelector('.product-price').getAttribute('data-price'));
+        totalCarrito += price;
+        actualizarTotal();
+        alert(`🛒 Has agregado "${productName}" a tu carrito. Total: $${totalCarrito.toFixed(2)}`);
+      });
+    });
+
+    // ===== FORMULARIO DE TARJETA =====
+    const toggleBtn = document.getElementById('toggleCardBtn');
+    const cardForm = document.getElementById('cardForm');
+    let cardVisible = false;
+
+    toggleBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      cardVisible = !cardVisible;
+      cardForm.classList.toggle('active', cardVisible);
+      toggleBtn.innerHTML = cardVisible ? '<i class="fas fa-times"></i> Cerrar pago' : '<i class="fas fa-credit-card"></i> Pagar con tarjeta';
+    });
+
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+      let value = this.value.replace(/\D/g, '');
+      if (value.length > 16) value = value.slice(0, 16);
+      let formatted = '';
+      for (let i = 0; i < value.length; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += value[i];
+      }
+      this.value = formatted;
+    });
+
+    document.getElementById('expiry').addEventListener('input', function(e) {
+      let value = this.value.replace(/\D/g, '');
+      if (value.length > 4) value = value.slice(0, 4);
+      if (value.length >= 2) {
+        this.value = value.slice(0, 2) + '/' + value.slice(2);
+      } else {
+        this.value = value;
+      }
+    });
+
+    document.getElementById('cvv').addEventListener('input', function(e) {
+      this.value = this.value.replace(/\D/g, '').slice(0, 4);
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const cardName = document.getElementById('cardName').value.trim();
+      const expiry = document.getElementById('expiry').value;
+      const cvv = document.getElementById('cvv').value;
+
+      if (cardNumber.length < 16) { alert('❌ Ingresa un número de tarjeta válido (16 dígitos).'); return; }
+      if (cardName.length < 3) { alert('❌ Ingresa el nombre del titular.'); return; }
+      if (expiry.length < 5 || !expiry.includes('/')) { alert('❌ Ingresa una fecha válida (MM/AA).'); return; }
+      if (cvv.length < 3) { alert('❌ Ingresa el CVV de 3 o 4 dígitos.'); return; }
+
+      const payBtn = this.querySelector('.btn-pay');
+      const originalText = payBtn.innerHTML;
+      payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+      payBtn.disabled = true;
+
+      setTimeout(() => {
+        alert(`✅ ¡Pago exitoso! Gracias por tu compra. Total: $${totalCarrito.toFixed(2)}`);
+        payBtn.innerHTML = '<i class="fas fa-check-circle"></i> ¡Pagado!';
+        payBtn.style.background = '#2b6b3a';
+        setTimeout(() => {
+          payBtn.innerHTML = originalText;
+          payBtn.disabled = false;
+          payBtn.style.background = '#1f4029';
+          document.getElementById('paymentForm').reset();
+          cardForm.classList.remove('active');
+          cardVisible = false;
+          toggleBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pagar con tarjeta';
+          totalCarrito = 0;
+          actualizarTotal();
+        }, 3000);
+      }, 2000);
+    });
+
+    document.getElementById('checkoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (totalCarrito === 0) {
+        alert('🛒 Tu carrito está vacío. Agrega productos antes de pagar.');
+        return;
+      }
+      if (!cardForm.classList.contains('active')) {
+        cardForm.classList.add('active');
+        cardVisible = true;
+        toggleBtn.innerHTML = '<i class="fas fa-times"></i> Cerrar pago';
+        document.getElementById('cardNumber').focus();
+      } else {
+        alert('💳 Completa los datos de tu tarjeta y presiona "Pagar".');
+      }
+    });
+  </script>
+
+</body>
+</html>
